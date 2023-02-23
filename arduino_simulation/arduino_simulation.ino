@@ -1,4 +1,4 @@
-int dwell;
+int dwell = 1000;
 
 void setup() {
   Serial.begin(9600);
@@ -22,7 +22,7 @@ void loop() {
     } else if (command.startsWith(":DELA ")) {
       response = "";
     } else if (command == ":DELA?") {
-      response = "1000";
+      response = "0";
     } else if (command.startsWith(":DWEL ")) {
       response = "";
     } else if (command == "DWEL?") {

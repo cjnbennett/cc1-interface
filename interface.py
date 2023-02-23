@@ -28,5 +28,10 @@ def get_dwell_time():
     response = connection.readline()
     return int(response)
 
+def set_dwell_time(dwell_time):
+    connection.write(b"DWEL " + bytearray(dwell_time))
+    response = connection.readline()
+    return response
+
 def close_connection():
     connection.close()

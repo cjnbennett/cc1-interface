@@ -17,16 +17,18 @@ class MainWindow(QMainWindow):
         self.buttonTakeData.setCheckable(True)
         self.buttonTakeData.clicked.connect(lambda:self.toggleButton(self.buttonTakeData))
         self.buttonBrowseFile.clicked.connect(self.onBrowseFileClicked)
+        global dwell_time
+        dwell_time = interface.get_dwell_time()
+        self.spinBoxDwellTime.setValue(dwell_time)
+        update_timer.setInterval(dwell_time)
+        self.spinBoxDwellTime.valueChanged.connect(self.updateDwellTime)
         self.update()
 
     def update(self):
         self.countA.setText(str(interface.get_count_A()))
         self.countB.setText(str(interface.get_count_B()))
         self.countAB.setText(str(interface.get_count_AB()))
-        global dwell_time
         global taking_data
-        dwell_time = interface.get_dwell_time()
-        update_timer.setInterval(dwell_time)
         if taking_data:
             self.data.append(self.countA.text())
             self.data_points_taken += 1
@@ -63,6 +65,12 @@ class MainWindow(QMainWindow):
             if ".csv" != filename[-4:]:
                 filename += ".csv"
             self.filePath.setText(filename)
+
+    def updateDwellTime(self):
+        global dwell_time
+        dwell_time = self.spinBoxDwellTime.value()
+        update_timer.setInterval(dwell_time)
+        interface.set_dwell_time(dwell_time)
 
 
 if __name__ == "__main__":

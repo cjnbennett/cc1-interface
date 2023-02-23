@@ -101,6 +101,42 @@
      <string>3</string>
     </property>
    </widget>
+   <widget class="QSpinBox" name="spinBoxNumPoints">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>135</y>
+      <width>42</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Number of points:</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="buttonTakeData">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Take Data</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

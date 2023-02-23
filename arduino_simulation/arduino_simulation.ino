@@ -10,11 +10,11 @@ void loop() {
     command = Serial.readStringUntil('\n');
 
     if (command == "COUN:C1?") {
-      response = "10238";
+      response = String(random(100000));
     } else if (command == "COUN:C2?") {
-      response = "34878";
+      response = String(random(100000));
     } else if (command == "COUN:CO?") {
-      response = "349";
+      response = String(random(1000));
     } else if (command == ":CLEA") {
       response = "";
     } else if (command.startsWith(":DELA ")) {

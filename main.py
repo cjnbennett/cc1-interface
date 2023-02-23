@@ -1,6 +1,6 @@
 import sys
 import interface
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic, QtCore
 
 dwell_time = 1000
@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         uic.loadUi("main.ui", self)
         self.buttonTakeData.setCheckable(True)
         self.buttonTakeData.clicked.connect(lambda:self.toggleButton(self.buttonTakeData))
+        self.buttonBrowseFile.clicked.connect(self.onBrowseFileClicked)
         self.update()
 
     def update(self):
@@ -30,7 +31,11 @@ class MainWindow(QMainWindow):
             self.data.append(self.countA.text())
             self.data_points_taken += 1
             if self.data_points_taken >= self.spinBoxNumPoints.value(): # make this save original value so it can be updated while taking data and not interfere with current run
-                print(self.data)
+                data_file = sys.stdout
+                data_file_name = self.filePath.text()
+                if data_file_name != "":
+                    data_file = open(data_file_name, "w") # test to make sure doesn't fail
+                print(str(self.data), file=data_file)
                 self.data = []
                 self.buttonTakeData.setChecked(False)
                 self.buttonTakeData.setText("Take Data")
@@ -51,6 +56,13 @@ class MainWindow(QMainWindow):
                 button.setText("Abort")
             else:
                 button.setText("Take Data")
+
+    def onBrowseFileClicked(self):
+        filename, _ = QFileDialog.getSaveFileName(parent=self, caption="Select output file", directory=".", filter="csv (*.csv)")
+        if filename:
+            if ".csv" != filename[-4:]:
+                filename += ".csv"
+            self.filePath.setText(filename)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+int dwell;
+
 void setup() {
   Serial.begin(9600);
 }
@@ -24,7 +26,7 @@ void loop() {
     } else if (command.startsWith(":DWEL ")) {
       response = "";
     } else if (command == "DWEL?") {
-      response = "2000";
+      response = String(dwell);
     } else if (command == "FIRM?") {
       response = "v1.0";
     } else if (command.startsWith(":GATE ")) {
@@ -47,4 +49,6 @@ void loop() {
 
     Serial.println(response);
   }
+
+  delay(dwell);
 }

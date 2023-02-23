@@ -23,5 +23,10 @@ def get_count_AB():
     response = connection.readline()
     return int(response)
 
+def get_dwell_time():
+    connection.write(b"DWEL?")
+    response = connection.readline()
+    return int(response)
+
 def close_connection():
     connection.close()

@@ -30,14 +30,10 @@ class MainWindow(QMainWindow):
         self.countAB.setText(str(interface.get_count_AB()))
         global taking_data
         if taking_data:
-            self.data.append(self.countA.text())
+            self.data.append((int(self.countA.text()), int(self.countB.text()), int(self.countAB.text())))
             self.data_points_taken += 1
             if self.data_points_taken >= self.spinBoxNumPoints.value(): # make this save original value so it can be updated while taking data and not interfere with current run
-                data_file = sys.stdout
-                data_file_name = self.filePath.text()
-                if data_file_name != "":
-                    data_file = open(data_file_name, "w") # test to make sure doesn't fail
-                print(str(self.data), file=data_file)
+                self.write_data()
                 self.data = []
                 self.buttonTakeData.setChecked(False)
                 self.buttonTakeData.setText("Take Data")
@@ -71,6 +67,19 @@ class MainWindow(QMainWindow):
         dwell_time = self.spinBoxDwellTime.value()
         update_timer.setInterval(dwell_time)
         interface.set_dwell_time(dwell_time)
+
+    def write_data(self):
+        data_file = sys.stdout
+        data_file_name = self.filePath.text()
+        if data_file_name != "":
+            data_file = open(data_file_name, "w") # test to make sure doesn't fail, close file
+
+        print("A,B,AB", file=data_file)
+        for point in self.data:
+            print(",".join(map(str, point)), file=data_file)
+
+        if data_file != sys.stdout:
+            data_file.close()
 
 
 if __name__ == "__main__":

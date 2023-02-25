@@ -25,10 +25,13 @@ class Connection():
             return 0
         return int(response)
 
-    # def get_count_AB(self):
-    #     self.connection.write(b"COUN:CO?")
-    #     response = self.connection.readline()
-    #     return int(response)
+    def get_count_coin(self):
+        try:
+            self.connection.write(b"COUN:CO?")
+            response = self.connection.readline()
+        except (SerialException, SerialTimeoutException):
+            return 0
+        return int(response)
 
     def get_dwell_time(self):
         try:

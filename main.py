@@ -91,13 +91,30 @@ class MainWindow(QMainWindow):
             self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1])))
         else:
             self.countBprime.setText("0")
-        self.countBprime.setText("0")
-        self.countAB.setText("0")
-        self.countBBprime.setText("0")
-        self.countABBprime.setText("0")
-        # self.countAB.setText(str(.get_count_coin()))
-        # self.countBBprime.setText(str(.get_count_BBprime()))
-        # self.countABBprime.setText(str(.get_count_ABBprime()))
+
+        if chan_A and chan_B and dets[chan_A[0]] and dets[chan_B[0]]:
+            count = 0
+            if chan_A[0] == chan_B[0]:
+                count = dets[chan_A[0]].get_count_coin()
+            else:
+                pass # gate channel
+            self.countAB.setText(str(count))
+        else:
+            self.countAB.setText("0")
+        if chan_B and chan_Bprime and dets[chan_B[0]] and dets[chan_Bprime[0]]:
+            count = 0
+            if chan_A[0] == chan_B[0]:
+                count = dets[chan_A[0]].get_count_coin()
+            else:
+                pass # gate channel
+            self.countBBprime.setText(str(count))
+        else:
+            self.countBBprime.setText("0")
+        if chan_A and chan_B and chan_Bprime and dets[chan_A[0]] and dets[chan_B[0]] and dets[chan_Bprime[0]]:
+            count = 0
+            self.countABBprime.setText(str(count))
+        else:
+            self.countABBprime.setText("0")
 
         global taking_data
         if taking_data:

@@ -2,13 +2,22 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
+    <width>528</width>
     <height>240</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -201,7 +210,7 @@
    <widget class="QSpinBox" name="spinBoxDwellTime">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>280</x>
       <y>140</y>
       <width>61</width>
       <height>21</height>
@@ -220,8 +229,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>170</y>
+      <x>170</x>
+      <y>160</y>
       <width>151</width>
       <height>17</height>
      </rect>
@@ -233,8 +242,8 @@
    <widget class="QSpinBox" name="spinBoxCoinWindow">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>170</y>
+      <x>320</x>
+      <y>160</y>
       <width>42</width>
       <height>21</height>
      </rect>
@@ -342,13 +351,232 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="labelDet1">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>30</y>
+      <width>71</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Detector 1:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelPorts">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>10</y>
+      <width>55</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Ports:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelDet2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>50</y>
+      <width>71</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Detector 2:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelChannels">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>10</y>
+      <width>55</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Channels:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelChanA">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>30</y>
+      <width>31</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>A:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelChanB">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>50</y>
+      <width>31</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>B:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelChanBprime">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>70</y>
+      <width>31</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>B':</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxPortDet1">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
+      <width>72</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxPortDet2">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>50</y>
+      <width>72</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxChanA">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>30</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 2</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="comboBoxChanB">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>50</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 2</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="comboBoxChanBprime">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>70</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 1, Channel 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Detector 2, Channel 2</string>
+     </property>
+    </item>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>340</width>
+     <width>528</width>
      <height>22</height>
     </rect>
    </property>

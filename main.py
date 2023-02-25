@@ -7,6 +7,10 @@ dwell_time = 1000
 coin_window = 2
 update_timer = QtCore.QTimer()
 taking_data = False
+dets = [None, None]      # [det1, det2]
+chan_A = [0,0]          # [detector, channel] -- both indexed from 0
+chan_B = [0,1]
+chan_Bprime = [1,0]
 
 class MainWindow(QMainWindow):
     data_points_taken = 0
@@ -19,23 +23,40 @@ class MainWindow(QMainWindow):
         self.buttonTakeData.clicked.connect(lambda:self.toggleButton(self.buttonTakeData))
         self.buttonBrowseFile.clicked.connect(self.onBrowseFileClicked)
         global dwell_time
-        dwell_time = interface.get_dwell_time()
+        if dets[0]:
+            dwell_time = dets[0].get_dwell_time()
+            if dets[1]:
+                dets[1].set_dwell_time(dwell_time)
+        elif dets[1]:
+            dwell_time = dets[1].get_dwell_time()
         self.spinBoxDwellTime.setValue(dwell_time)
         update_timer.setInterval(dwell_time)
         self.spinBoxDwellTime.valueChanged.connect(self.updateDwellTime)
         global coin_window
-        coin_window = interface.get_coin_window()
+        if dets[0]:
+            coin_window = dets[0].get_coin_window()
+            if dets[1]:
+                dets[1].set_coin_window(coin_window)
+        elif dets[1]:
+            coin_window = dets[1].get_coin_window()
         self.spinBoxCoinWindow.setValue(coin_window)
         self.spinBoxCoinWindow.valueChanged.connect(self.updateCoinWindow)
         self.update()
 
     def update(self):
-        self.countA.setText(str(interface.get_count_A()))
-        self.countB.setText(str(interface.get_count_B()))
-        self.countAB.setText(str(interface.get_count_AB()))
-        self.countBprime.setText(str(interface.get_count_Bprime()))
-        self.countBBprime.setText(str(interface.get_count_BBprime()))
-        self.countABBprime.setText(str(interface.get_count_ABBprime()))
+        if dets[chan_A[0]]:
+            self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1])))
+        if dets[chan_B[0]]:
+            self.countB.setText(str(dets[chan_B[0]].get_count(chan_B[1])))
+        if dets[chan_Bprime[0]]:
+            self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1])))
+        self.countBprime.setText("0")
+        self.countAB.setText("0")
+        self.countBBprime.setText("0")
+        self.countABBprime.setText("0")
+        # self.countAB.setText(str(.get_count_coin()))
+        # self.countBBprime.setText(str(.get_count_BBprime()))
+        # self.countABBprime.setText(str(.get_count_ABBprime()))
         global taking_data
         if taking_data:
             self.data.append((int(self.countA.text()), int(self.countB.text()), int(self.countAB.text()), int(self.countBprime.text()), int(self.countBBprime.text()), int(self.countABBprime.text()), dwell_time, coin_window))
@@ -50,7 +71,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, *args, **kwargs):
         super().closeEvent(*args, **kwargs)
-        interface.close_connection()
+        for det in dets:
+            if det:
+                det.close_connection()
 
     def toggleButton(self, button):
         if button == self.buttonTakeData:
@@ -74,12 +97,16 @@ class MainWindow(QMainWindow):
         global dwell_time
         dwell_time = self.spinBoxDwellTime.value()
         update_timer.setInterval(dwell_time)
-        interface.set_dwell_time(dwell_time)
+        for det in dets:
+            if det:
+                det.set_dwell_time(dwell_time)
 
     def updateCoinWindow(self):
         global coin_window
         coin_window = self.spinBoxCoinWindow.value()
-        interface.set_coin_window(coin_window)
+        for det in dets:
+            if det:
+                det.set_coin_window(coin_window)
         print(coin_window)
 
     def write_data(self):
@@ -97,7 +124,8 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    interface.open_connection()
+    dets[0] = interface.Connection("/dev/ttyACM0")
+    # dets[1] = interface.Connection("/dev/ttyACM1")
     app = QApplication(sys.argv)
 
     mainWindow = MainWindow()

@@ -65,6 +65,9 @@ class MainWindow(QMainWindow):
         self.comboBoxPortDet1.addItems(comport.device for comport in serial.tools.list_ports.comports())
         if old_port in [self.comboBoxPortDet1.itemText(i) for i in range(self.comboBoxPortDet1.count())]:
             self.comboBoxPortDet1.setCurrentText(old_port)
+        else:
+            if dets[0]:
+                dets[0].close_connection()
 
         old_port = self.comboBoxPortDet2.currentText()
         self.comboBoxPortDet2.clear()
@@ -72,6 +75,9 @@ class MainWindow(QMainWindow):
         self.comboBoxPortDet2.addItems(comport.device for comport in serial.tools.list_ports.comports())
         if old_port in [self.comboBoxPortDet2.itemText(i) for i in range(self.comboBoxPortDet2.count())]:
             self.comboBoxPortDet2.setCurrentText(old_port)
+        else:
+            if dets[1]:
+                dets[1].close_connection()
 
         if chan_A and dets[chan_A[0]]:
             self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1])))
@@ -143,7 +149,6 @@ class MainWindow(QMainWindow):
         for det in dets:
             if det:
                 det.set_coin_window(coin_window)
-        print(coin_window)
 
     def updateChannels(self):
         global chan_A, chan_B, chan_Bprime

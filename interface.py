@@ -23,6 +23,15 @@ def get_count_AB():
     response = connection.readline()
     return int(response)
 
+def get_count_Bprime():
+    return 0
+
+def get_count_BBprime():
+    return 0
+
+def get_count_ABBprime():
+    return 0
+
 def get_dwell_time():
     connection.write(b"DWEL?")
     response = connection.readline()

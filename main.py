@@ -1,5 +1,6 @@
 import sys
 import interface
+import serial.tools.list_ports
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic, QtCore
 
@@ -32,6 +33,8 @@ class MainWindow(QMainWindow):
         self.buttonTakeData.clicked.connect(lambda:self.toggleButton(self.buttonTakeData))
         self.buttonBrowseFile.clicked.connect(self.onBrowseFileClicked)
 
+        self.buttonReconnect.clicked.connect(self.reconnect)
+
         global dwell_time
         if dets[0]:
             dwell_time = dets[0].get_dwell_time()
@@ -56,6 +59,20 @@ class MainWindow(QMainWindow):
         self.update()
 
     def update(self):
+        old_port = self.comboBoxPortDet1.currentText()
+        self.comboBoxPortDet1.clear()
+        self.comboBoxPortDet1.addItem("")
+        self.comboBoxPortDet1.addItems(comport.device for comport in serial.tools.list_ports.comports())
+        if old_port in [self.comboBoxPortDet1.itemText(i) for i in range(self.comboBoxPortDet1.count())]:
+            self.comboBoxPortDet1.setCurrentText(old_port)
+
+        old_port = self.comboBoxPortDet2.currentText()
+        self.comboBoxPortDet2.clear()
+        self.comboBoxPortDet2.addItem("")
+        self.comboBoxPortDet2.addItems(comport.device for comport in serial.tools.list_ports.comports())
+        if old_port in [self.comboBoxPortDet2.itemText(i) for i in range(self.comboBoxPortDet2.count())]:
+            self.comboBoxPortDet2.setCurrentText(old_port)
+
         if chan_A and dets[chan_A[0]]:
             self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1])))
         else:
@@ -75,6 +92,7 @@ class MainWindow(QMainWindow):
         # self.countAB.setText(str(.get_count_coin()))
         # self.countBBprime.setText(str(.get_count_BBprime()))
         # self.countABBprime.setText(str(.get_count_ABBprime()))
+
         global taking_data
         if taking_data:
             self.data.append((int(self.countA.text()), int(self.countB.text()), int(self.countAB.text()), int(self.countBprime.text()), int(self.countBBprime.text()), int(self.countABBprime.text()), dwell_time, coin_window))
@@ -133,6 +151,18 @@ class MainWindow(QMainWindow):
         chan_B = channelize(self.comboBoxChanB.currentIndex())
         chan_Bprime = channelize(self.comboBoxChanBprime.currentIndex())
 
+    def reconnect(self):
+        port = self.comboBoxPortDet1.currentText()
+        if port != "":
+            if dets[0]:
+                dets[0].close_connection()
+            dets[0] = interface.Connection(port)
+        port = self.comboBoxPortDet2.currentText()
+        if port != "":
+            if dets[1]:
+                dets[1].close_connection()
+            dets[1] = interface.Connection(port)
+
     def write_data(self):
         data_file = sys.stdout
         data_file_name = self.filePath.text()
@@ -160,8 +190,6 @@ def channelize(i):
 
 
 if __name__ == "__main__":
-    dets[0] = interface.Connection("/dev/ttyACM0")
-    # dets[1] = interface.Connection("/dev/ttyACM1")
     app = QApplication(sys.argv)
 
     mainWindow = MainWindow()

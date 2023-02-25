@@ -463,6 +463,11 @@
       <height>16</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string/>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBoxPortDet2">
     <property name="geometry">
@@ -473,6 +478,11 @@
       <height>16</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string/>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBoxChanA">
     <property name="geometry">
@@ -584,6 +594,19 @@
       <string>Detector 2, Channel 2</string>
      </property>
     </item>
+   </widget>
+   <widget class="QPushButton" name="buttonReconnect">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>70</y>
+      <width>80</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reconnect</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

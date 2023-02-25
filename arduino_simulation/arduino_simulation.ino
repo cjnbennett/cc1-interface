@@ -44,7 +44,7 @@ void loop() {
     } else if (command.startsWith(":WIND ")) {
       response = "";
     } else if (command == "WIND?") {
-      response = "1284";
+      response = "2";
     }
 
     Serial.println(response);

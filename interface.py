@@ -33,5 +33,15 @@ def set_dwell_time(dwell_time):
     response = connection.readline()
     return response
 
+def get_coin_window():
+    connection.write(b"WIND?")
+    response = connection.readline()
+    return int(response)
+
+def set_coin_window(coin_window):
+    connection.write(b":WIND " + bytearray(coin_window))
+    response = connection.readline()
+    return response
+
 def close_connection():
     connection.close()

@@ -19,9 +19,19 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("main.ui", self)
+
+        global chan_A, chan_B, chan_Bprime
+        chan_A = channelize(self.comboBoxChanA.currentIndex())
+        chan_B = channelize(self.comboBoxChanB.currentIndex())
+        chan_Bprime = channelize(self.comboBoxChanBprime.currentIndex())
+        self.comboBoxChanA.currentIndexChanged.connect(self.updateChannels)
+        self.comboBoxChanB.currentIndexChanged.connect(self.updateChannels)
+        self.comboBoxChanBprime.currentIndexChanged.connect(self.updateChannels)
+
         self.buttonTakeData.setCheckable(True)
         self.buttonTakeData.clicked.connect(lambda:self.toggleButton(self.buttonTakeData))
         self.buttonBrowseFile.clicked.connect(self.onBrowseFileClicked)
+
         global dwell_time
         if dets[0]:
             dwell_time = dets[0].get_dwell_time()
@@ -32,6 +42,7 @@ class MainWindow(QMainWindow):
         self.spinBoxDwellTime.setValue(dwell_time)
         update_timer.setInterval(dwell_time)
         self.spinBoxDwellTime.valueChanged.connect(self.updateDwellTime)
+
         global coin_window
         if dets[0]:
             coin_window = dets[0].get_coin_window()
@@ -41,15 +52,22 @@ class MainWindow(QMainWindow):
             coin_window = dets[1].get_coin_window()
         self.spinBoxCoinWindow.setValue(coin_window)
         self.spinBoxCoinWindow.valueChanged.connect(self.updateCoinWindow)
+
         self.update()
 
     def update(self):
-        if dets[chan_A[0]]:
+        if chan_A and dets[chan_A[0]]:
             self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1])))
-        if dets[chan_B[0]]:
+        else:
+            self.countA.setText("0")
+        if chan_B and dets[chan_B[0]]:
             self.countB.setText(str(dets[chan_B[0]].get_count(chan_B[1])))
-        if dets[chan_Bprime[0]]:
+        else:
+            self.countB.setText("0")
+        if chan_Bprime and dets[chan_Bprime[0]]:
             self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1])))
+        else:
+            self.countBprime.setText("0")
         self.countBprime.setText("0")
         self.countAB.setText("0")
         self.countBBprime.setText("0")
@@ -109,6 +127,12 @@ class MainWindow(QMainWindow):
                 det.set_coin_window(coin_window)
         print(coin_window)
 
+    def updateChannels(self):
+        global chan_A, chan_B, chan_Bprime
+        chan_A = channelize(self.comboBoxChanA.currentIndex())
+        chan_B = channelize(self.comboBoxChanB.currentIndex())
+        chan_Bprime = channelize(self.comboBoxChanBprime.currentIndex())
+
     def write_data(self):
         data_file = sys.stdout
         data_file_name = self.filePath.text()
@@ -121,6 +145,18 @@ class MainWindow(QMainWindow):
 
         if data_file != sys.stdout:
             data_file.close()
+
+
+def channelize(i):
+    if i == 1:
+        return [0,0]
+    elif i == 2:
+        return [0,1]
+    elif i == 3:
+        return [1,0]
+    elif i == 4:
+        return [1,1]
+    return None
 
 
 if __name__ == "__main__":

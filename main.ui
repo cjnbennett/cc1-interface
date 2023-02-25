@@ -485,6 +485,11 @@
     </property>
     <item>
      <property name="text">
+      <string>None</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>Detector 1, Channel 1</string>
      </property>
     </item>
@@ -514,8 +519,13 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
+    <item>
+     <property name="text">
+      <string>None</string>
+     </property>
+    </item>
     <item>
      <property name="text">
       <string>Detector 1, Channel 1</string>
@@ -547,8 +557,13 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
+    <item>
+     <property name="text">
+      <string>None</string>
+     </property>
+    </item>
     <item>
      <property name="text">
       <string>Detector 1, Channel 1</string>

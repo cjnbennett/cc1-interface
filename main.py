@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic, QtCore
 from PyQt6.QtCore import QThread
 import serial_controller
+from collections import Counter
 
 dwell_time = 1000
 coin_window = 2
@@ -72,25 +73,28 @@ class MainWindow(QMainWindow):
         self.update()
 
     def update(self):
-        old_port = self.comboBoxPortDet1.currentText()
-        self.comboBoxPortDet1.clear()
-        self.comboBoxPortDet1.addItem("")
-        self.comboBoxPortDet1.addItems(comport.device for comport in serial.tools.list_ports.comports())
-        if old_port in [self.comboBoxPortDet1.itemText(i) for i in range(self.comboBoxPortDet1.count())]:
-            self.comboBoxPortDet1.setCurrentText(old_port)
-        else:
-            if dets[0]:
-                dets[0].close_connection()
+        ports = [comport.device for comport in serial.tools.list_ports.comports()]
+        if Counter(ports) != Counter(self.comboBoxPortDet1.itemText(i) for i in range(self.comboBoxPortDet1.count()) if self.comboBoxPortDet1.itemText(i) != ""):
+            old_port = self.comboBoxPortDet1.currentText()
+            self.comboBoxPortDet1.clear()
+            self.comboBoxPortDet1.addItem("")
+            self.comboBoxPortDet1.addItems(ports)
+            if old_port in [self.comboBoxPortDet1.itemText(i) for i in range(self.comboBoxPortDet1.count())]:
+                self.comboBoxPortDet1.setCurrentText(old_port)
+            else:
+                if dets[0]:
+                    dets[0].close_connection()
 
-        old_port = self.comboBoxPortDet2.currentText()
-        self.comboBoxPortDet2.clear()
-        self.comboBoxPortDet2.addItem("")
-        self.comboBoxPortDet2.addItems(comport.device for comport in serial.tools.list_ports.comports())
-        if old_port in [self.comboBoxPortDet2.itemText(i) for i in range(self.comboBoxPortDet2.count())]:
-            self.comboBoxPortDet2.setCurrentText(old_port)
-        else:
-            if dets[1]:
-                dets[1].close_connection()
+        if Counter(ports) != Counter(self.comboBoxPortDet2.itemText(i) for i in range(self.comboBoxPortDet2.count()) if self.comboBoxPortDet2.itemText(i) != ""):
+            old_port = self.comboBoxPortDet2.currentText()
+            self.comboBoxPortDet2.clear()
+            self.comboBoxPortDet2.addItem("")
+            self.comboBoxPortDet2.addItems(ports)
+            if old_port in [self.comboBoxPortDet2.itemText(i) for i in range(self.comboBoxPortDet2.count())]:
+                self.comboBoxPortDet2.setCurrentText(old_port)
+            else:
+                if dets[1]:
+                    dets[1].close_connection()
 
         global taking_data
         if not taking_data:

@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="enabled">
-   <bool>true</bool>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,12 +9,6 @@
     <width>528</width>
     <height>240</height>
    </rect>
-  </property>
-  <property name="font">
-   <font>
-    <weight>50</weight>
-    <bold>false</bold>
-   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -381,7 +372,6 @@
     </property>
     <property name="font">
      <font>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -407,13 +397,13 @@
      <rect>
       <x>350</x>
       <y>10</y>
-      <width>55</width>
+      <width>61</width>
       <height>17</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <weight>75</weight>
+      <pointsize>9</pointsize>
       <bold>true</bold>
      </font>
     </property>

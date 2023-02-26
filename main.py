@@ -3,6 +3,8 @@ import interface
 import serial.tools.list_ports
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic, QtCore
+from PyQt6.QtCore import QThread
+import serial_controller
 
 dwell_time = 1000
 coin_window = 2
@@ -12,6 +14,7 @@ dets = [None, None]      # [det1, det2]
 chan_A = [0,0]          # [detector, channel] -- both indexed from 0
 chan_B = [0,1]
 chan_Bprime = [1,0]
+sc = None
 
 class MainWindow(QMainWindow):
     data_points_taken = 0
@@ -56,6 +59,16 @@ class MainWindow(QMainWindow):
         self.spinBoxCoinWindow.setValue(coin_window)
         self.spinBoxCoinWindow.valueChanged.connect(self.updateCoinWindow)
 
+        global sc
+        sc = serial_controller.SerialController([])
+        self.task_thread = QThread()
+        sc.moveToThread(self.task_thread)
+        self.task_thread.started.connect(sc.start)
+        sc.finished.connect(self.task_thread.quit)
+        sc.finished.connect(self.task_thread.deleteLater)
+        self.task_thread.finished.connect(self.task_thread.deleteLater)
+        self.task_thread.start()
+
         self.update()
 
     def update(self):
@@ -80,38 +93,35 @@ class MainWindow(QMainWindow):
                 dets[1].close_connection()
 
         if chan_A and dets[chan_A[0]]:
-            self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1])))
+            sc.add_task(lambda:self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1]))))
         else:
             self.countA.setText("0")
         if chan_B and dets[chan_B[0]]:
-            self.countB.setText(str(dets[chan_B[0]].get_count(chan_B[1])))
+            sc.add_task(lambda:self.countB.setText(str(dets[chan_B[0]].get_count(chan_B[1]))))
         else:
             self.countB.setText("0")
         if chan_Bprime and dets[chan_Bprime[0]]:
-            self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1])))
+            sc.add_task(lambda:self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1]))))
         else:
             self.countBprime.setText("0")
 
         if chan_A and chan_B and dets[chan_A[0]] and dets[chan_B[0]]:
-            count = 0
             if chan_A[0] == chan_B[0]:
-                count = dets[chan_A[0]].get_count_coin()
+                sc.add_task(lambda:self.countAB.setText(str(dets[chan_A[0]].get_count_coin())))
             else:
-                pass # gate channel
-            self.countAB.setText(str(count))
+                self.countAB.setText("0") # gate channel
         else:
             self.countAB.setText("0")
         if chan_B and chan_Bprime and dets[chan_B[0]] and dets[chan_Bprime[0]]:
-            count = 0
-            if chan_A[0] == chan_B[0]:
-                count = dets[chan_A[0]].get_count_coin()
+            if chan_B[0] == chan_Bprime[0]:
+                sc.add_task(lambda:self.countBBprime.setText(str(dets[chan_B[0]].get_count_coin())))
             else:
-                pass # gate channel
-            self.countBBprime.setText(str(count))
+                self.countBBprime.setText("0") # gate channel
         else:
             self.countBBprime.setText("0")
         if chan_A and chan_B and chan_Bprime and dets[chan_A[0]] and dets[chan_B[0]] and dets[chan_Bprime[0]]:
             count = 0
+            # TODO gate channel
             self.countABBprime.setText(str(count))
         else:
             self.countABBprime.setText("0")
@@ -130,6 +140,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, *args, **kwargs):
         super().closeEvent(*args, **kwargs)
+        sc.interrupt()
         for det in dets:
             if det:
                 det.close_connection()
@@ -209,7 +220,6 @@ def channelize(i):
     elif i == 4:
         return [1,1]
     return None
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

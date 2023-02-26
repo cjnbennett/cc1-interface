@@ -92,44 +92,12 @@ class MainWindow(QMainWindow):
             if dets[1]:
                 dets[1].close_connection()
 
-        if chan_A and dets[chan_A[0]]:
-            sc.add_task(lambda:self.countA.setText(str(dets[chan_A[0]].get_count(chan_A[1]))))
-        else:
-            self.countA.setText("0")
-        if chan_B and dets[chan_B[0]]:
-            sc.add_task(lambda:self.countB.setText(str(dets[chan_B[0]].get_count(chan_B[1]))))
-        else:
-            self.countB.setText("0")
-        if chan_Bprime and dets[chan_Bprime[0]]:
-            sc.add_task(lambda:self.countBprime.setText(str(dets[chan_Bprime[0]].get_count(chan_Bprime[1]))))
-        else:
-            self.countBprime.setText("0")
-
-        if chan_A and chan_B and dets[chan_A[0]] and dets[chan_B[0]]:
-            if chan_A[0] == chan_B[0]:
-                sc.add_task(lambda:self.countAB.setText(str(dets[chan_A[0]].get_count_coin())))
-            else:
-                self.countAB.setText("0") # gate channel
-        else:
-            self.countAB.setText("0")
-        if chan_B and chan_Bprime and dets[chan_B[0]] and dets[chan_Bprime[0]]:
-            if chan_B[0] == chan_Bprime[0]:
-                sc.add_task(lambda:self.countBBprime.setText(str(dets[chan_B[0]].get_count_coin())))
-            else:
-                self.countBBprime.setText("0") # gate channel
-        else:
-            self.countBBprime.setText("0")
-        if chan_A and chan_B and chan_Bprime and dets[chan_A[0]] and dets[chan_B[0]] and dets[chan_Bprime[0]]:
-            count = 0
-            # TODO gate channel
-            self.countABBprime.setText(str(count))
-        else:
-            self.countABBprime.setText("0")
-
         global taking_data
+        if not taking_data:
+            sc.add_task(self.get_counts)
+
         if taking_data:
-            self.data.append((int(self.countA.text()), int(self.countB.text()), int(self.countAB.text()), int(self.countBprime.text()), int(self.countBBprime.text()), int(self.countABBprime.text()), dwell_time, coin_window))
-            self.data_points_taken += 1
+            sc.add_task(self.take_data)
             if self.data_points_taken >= self.spinBoxNumPoints.value(): # make this save original value so it can be updated while taking data and not interfere with current run
                 self.write_data()
                 self.data = []
@@ -196,13 +164,53 @@ class MainWindow(QMainWindow):
                 dets[1].close_connection()
             dets[1] = interface.Connection(port)
 
+    def get_counts(self):
+        if chan_A and dets[chan_A[0]]:
+            nA = dets[chan_A[0]].get_count(chan_A[1])
+        else:
+            nA = 0
+        if chan_B and dets[chan_B[0]]:
+            nB = dets[chan_B[0]].get_count(chan_B[1])
+        else:
+            nB = 0
+        if chan_Bprime and dets[chan_Bprime[0]]:
+            nBprime = dets[chan_Bprime[0]].get_count(chan_Bprime[1])
+        else:
+            nBprime = 0
+        if chan_A and chan_B and dets[chan_A[0]] and dets[chan_B[0]]:
+            if chan_A[0] == chan_B[0]:
+                nAB = dets[chan_A[0]].get_count_coin()
+            else:
+                nAB = 0
+        else:
+            nAB = 0
+        if chan_B and chan_Bprime and dets[chan_B[0]] and dets[chan_Bprime[0]]:
+            if chan_B[0] == chan_Bprime[0]:
+                nBBprime = dets[chan_B[0]].get_count_coin() # if
+            else:
+                nBBprime = 0
+        else:
+            nBBprime = 0
+        nABBprime = 0
+        self.countA.setText(str(nA))
+        self.countB.setText(str(nB))
+        self.countAB.setText(str(nAB))
+        self.countBprime.setText(str(nBprime))
+        self.countBBprime.setText(str(nBBprime))
+        self.countABBprime.setText(str(nABBprime))
+        return nA, nB, nBprime, nAB, nBBprime, nABBprime
+
+    def take_data(self):
+        self.data.append((*self.get_counts(), dwell_time, coin_window))
+        self.data_points_taken += 1
+
     def write_data(self):
         data_file = sys.stdout
         data_file_name = self.filePath.text()
         if data_file_name != "":
             data_file = open(data_file_name, "w") # test to make sure doesn't fail
 
-        print("N(A),N(B),N(AB),N(B'),N(BB'),N(ABB'),update_time,coincidence_window", file=data_file)
+        print("N(A),N(B),N(B'),N(AB),N(BB'),N(ABB'),update_time,coincidence_window", file=data_file)
         for point in self.data:
             print(",".join(map(str, point)), file=data_file)
 

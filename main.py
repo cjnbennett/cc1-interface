@@ -162,11 +162,13 @@ class MainWindow(QMainWindow):
             if dets[0]:
                 dets[0].close_connection()
             dets[0] = interface.Connection(port)
+            dets[0].set_trigger(interface.Trigger.CONTINUOUS)
         port = self.comboBoxPortDet2.currentText()
         if port != "":
             if dets[1]:
                 dets[1].close_connection()
             dets[1] = interface.Connection(port)
+            dets[1].set_trigger(interface.Trigger.CONTINUOUS)
 
     def get_counts(self):
         if chan_A and dets[chan_A[0]]:
